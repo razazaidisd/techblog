@@ -1,0 +1,27 @@
+<p style="text-align:right">
+  <% if current_user %>
+  Logged in as: <%= current_user.email.split('@')[0] %>
+  <%= link_to 'Logout', logout_path, :method => 'Destroy' %>
+  <% else %>
+  <%= link_to 'Login', login_path %> OR  
+  <%= link_to 'Sign Up', signup_path %>
+  <% end %>
+</p>
+<% if flash[:notice] -%>
+  <p class='notice'><%= flash[:notice] %></p>
+<% end %>
+<% if flash[:error] -%>
+  <p class='notice'><%= flash[:error] %></p>
+<% end %>
+<h1>Edit Your Comment</h1>
+
+<%= form_for @comment do |c| %>
+  
+  <p>
+    <%= c.label "Comment" %><br />
+    <%= c.text_area  :comment %>
+  </p>
+  
+
+  <p class="button"><%= c.submit "Edit "%></p>
+<% end %>

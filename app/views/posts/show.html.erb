@@ -1,0 +1,62 @@
+<p style="text-align:right">
+	<% if current_user %>
+	Logged in as: <%= current_user.email.split('@')[0] %>
+	<%= link_to 'Logout', logout_path, :method => 'Destroy' %>
+	<% else %>
+	<%= link_to 'Login', login_path %> OR  
+	<%= link_to 'Sign Up', signup_path %>
+	<% end %>
+	<span style="float:left">
+<%= link_to 'Back to All post', posts_path %><br>
+	</span>
+</p>
+<h3>Search Post</h3>
+
+<p>Post Id: <%= @post.id %></p>
+<h4>Title: <%= @post.title %></h4>
+<p> Description: <%= @post.content %></p>
+<small> Author Name:<%= @post.name %></small><br>
+<% if session[:user_id] %>
+	<% if @post.user_id == current_user.id %>
+		<%= link_to 'Edit this post', edit_post_path %> |
+	<% end %>
+<% end %>
+
+
+<hr>
+<h2>Comments</h2>
+<% if @view %>
+	<% @view.each do |d| %>
+		<p>Comment: <%= d.comment %></p>
+		<small>UserName: <%= d.name %></small><br>
+<% if session[:user_id] %>		
+	<% if d.user_id == current_user.id %>
+		<%= link_to 'Edit', edit_comment_path(d) %>
+		<%= link_to 'Destroy', comment_path(d), :method => :delete, :confirm => "Are you sure?" %>
+	<% end %>
+<% end %>
+
+	<% end %>
+<% else %>
+	<p>There is no comments yet on this post.</p>
+<% end %>
+
+<hr>
+<%= form_for @comment do |c| %>
+	<h3>Add Comment:</h3>
+	<% if session[:user_id] %>
+	<p> UserName: <%= current_user.email.split('@')[0] %> 
+		<%= c.hidden_field :name,:value => current_user.email %>
+	</p>
+	<p> <%= c.label 'Your Comment:' %> 
+		<%= c.text_area :comment , :cols => 26, :rows => 6 %>
+	</p>
+	<%= hidden_field_tag :post_id, @post.id %>
+	<%= hidden_field_tag :user_id, current_user.id %>
+	<%= c.submit 'Comment' %>
+	<% else %>
+	Please <%= link_to 'Login', login_path %> to comment on this post.
+	<% end %>
+
+	
+<% end %>
